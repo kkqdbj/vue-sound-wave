@@ -1,5 +1,11 @@
-# Vue 3 + Vite
+# vue-sound-wave
+vue3音频波浪
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 项目描述
+基于Vue 3 + Vite的音频波浪可视化组件库。
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## 技术栈
+- Vue 3
+- TypeScript
+- Element UI
+- Axios
