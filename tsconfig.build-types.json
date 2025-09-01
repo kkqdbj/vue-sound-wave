@@ -1,0 +1,19 @@
+{
+  "exclude": [
+    "src/**/__tests__/*",
+    "src/App.vue",
+    "src/main.ts",
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "outDir": "dist/types",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "composite": true,
+    "lib": [],
+    "types": [
+      "node",
+      "jsdom"
+    ]
+  }
+}

@@ -1,45 +1,46 @@
 {
-  "name": "my-vue-plugin",
-  "version": "1.0.0",
-  "description": "A Vue.js plugin for sound wave visualization",
+  "name": "vue-sound-wave",
+  "version": "0.1.0",
+  "description": "Vue3音频波浪可视化组件库",
   "main": "dist/vue-sound-wave.umd.js",
   "module": "dist/vue-sound-wave.js",
   "types": "dist/index.d.ts",
   "type": "module",
-  "keywords": ["vue", "plugin", "sound", "wave", "audio", "visualization"],
-  "author": "Your Name <your.email@example.com>",
+  "keywords": [
+    "vue",
+    "plugin",
+    "sound",
+    "wave",
+    "audio",
+    "visualization"
+  ],
+  "author": "kkqdbj <2542880819@qq.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kkqdbj/my-vue-plugin.git"
+    "url": "https://github.com/kkqdbj/vue-sound-wave.git"
   },
-  "homepage": "https://github.com/kkqdbj/my-vue-plugin#readme",
+  "homepage": "https://github.com/kkqdbj/vue-sound-wave#readme",
   "bugs": {
-    "url": "https://github.com/kkqdbj/my-vue-plugin/issues"
+    "url": "https://github.com/kkqdbj/vue-sound-wave/issues"
   },
   "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
+    "dist"
   ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:rollup": "rollup -c",
-    "prepublishOnly": "npm run build:rollup"
+    "build-demo": "vite build",
+    "build-dist": "vite build --config vite.config.dist.ts",
+    "build-types": "vue-tsc -p tsconfig.build-types.json"
   },
   "dependencies": {
+    "@vitejs/plugin-basic-ssl": "^2.1.0",
+    "@vitejs/plugin-vue": "^6.0.1",
     "vue": "^3.5.10"
   },
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.4",
-    "@vitejs/plugin-vue": "^6.0.1",
-    "rollup": "^4.49.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-typescript2": "^0.36.0",
-    "rollup-plugin-vue": "^6.0.0",
     "vite": "^7.1.2"
   }
 }
