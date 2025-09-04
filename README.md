@@ -72,7 +72,7 @@ app.mount('#app')
 | `width` | `number` | `800` | 画布宽度 |
 | `height` | `number` | `200` | 画布高度 |
 | `barWidth` | `number` | `4` | 频谱条宽度 |
-| `barGap` | `number` | `2` | 频谱条间距 |
+| `barSpace` | `number` | `2` | 频谱条间距 |
 | `gradientColors` | `string[]` | `['#4F46E5', '#7C3AED', '#EC4899', '#EF4444', '#F59E0B']` | 渐变色数组 |
 | `backgroundColor` | `string` | `'rgba(15, 23, 42, 0.8)'` | 背景色 |
 | `responsive` | `boolean` | `true` | 是否响应式 |

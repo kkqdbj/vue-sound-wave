@@ -1,26 +1,27 @@
 import type {Ref} from 'vue'
-import {ref, watch, onMounted, onUnmounted, nextTick} from 'vue'
+import {ref, watch, onMounted, onUnmounted} from 'vue'
 
 
-export default function useAudioContext<T>(
-    containerRef:Ref<HTMLDivElement>,
-    canvasRef:Ref<HTMLCanvasElement>,
+export default function useAudioContext<T extends {
+    fftSize: number;
+    smoothing: number;
+    responsive: boolean;
+    audioSrc: string;
+}>(
+    containerRef:Ref<HTMLDivElement | undefined>,
+    canvasRef:Ref<HTMLCanvasElement | undefined>,
     audioRef:Ref<HTMLAudioElement | null>,
-    callback:(data: Uint8Array<ArrayBuffer>)=>void,
-    setting:T & {
-        fftSize:number,
-        smoothing:number,
-        responsive:boolean,
-        audioSrc:string
-    }){
+    callback:(data: Uint8Array, end: boolean)=>boolean,
+    onFinish:()=>void,
+    setting: T
+) {
 
     const audioContext = ref<AudioContext>()
     const analyser = ref<AnalyserNode>()
-    const dataArray = ref<Uint8Array<ArrayBuffer>>()
+    const dataArray = ref<Uint8Array>()
     const animationId = ref<number>()
     const isPlaying = ref(false)
     const smoothedData = ref<number[]>([])
-    // const gradient = ref<CanvasGradient>()
     const source = ref<MediaElementAudioSourceNode | null>(null)
 
     const initAudioContext = async () => {
@@ -48,8 +49,26 @@ export default function useAudioContext<T>(
             return;
         }
         analyser.value.getByteFrequencyData(dataArray.value )
-        callback(dataArray.value)
+        callback(dataArray.value,false)
         animationId.value = requestAnimationFrame(draw)
+    }
+
+    const drawEnd = function(){
+        if(!analyser.value || !dataArray.value){
+            return;
+        }
+        const isOver = callback([] as unknown as Uint8Array,true)
+        if(!isOver){
+            animationId.value = requestAnimationFrame(drawEnd)
+        }else{
+            if(canvasRef.value){
+                const ctx = canvasRef.value.getContext('2d')
+                if(ctx){
+                    ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+                }
+            }
+            onFinish?.()
+        }
     }
 
     // 音频控制方法
@@ -72,9 +91,9 @@ export default function useAudioContext<T>(
     }
 
     const onAudioLoaded = () => {
-    if (!audioContext.value) {
-        initAudioContext()
-    }
+        if (!audioContext.value) {
+            initAudioContext()
+        }
     }
 
     const onAudioPlay = () => {
@@ -91,21 +110,30 @@ export default function useAudioContext<T>(
         }
     }
 
+    const onAudioEnded = () => {
+        isPlaying.value = false
+        if (animationId.value) {
+           drawEnd();
+        }
+        // 可以在这里添加播放完毕后的其他逻辑
+    }
+
     const resizeCanvas = () => {
         if (!setting.responsive || !canvasRef.value || !containerRef.value) return
         
         const container = containerRef.value
-        canvasRef.value.width = container.clientWidth
-        canvasRef.value.height = container.clientHeight
+        const dpi = window.devicePixelRatio;
+        canvasRef.value.style.width = container.clientWidth + 'px';
+        canvasRef.value.style.height = container.clientHeight + 'px';
+        canvasRef.value.width = container.clientWidth * dpi;
+        canvasRef.value.height = container.clientHeight * dpi;
     }
 
     onMounted(() => {
-        
+        resizeCanvas()
         if (setting.responsive) {
-            resizeCanvas()
             window.addEventListener('resize', resizeCanvas)
         }
-    
     })
 
     onUnmounted(() => {
@@ -135,13 +163,9 @@ export default function useAudioContext<T>(
     return {
         onAudioPlay,
         onAudioPause,
+        onAudioEnded,
         togglePlay,
-        onAudioLoaded
+        onAudioLoaded,
+        isPlaying
     }
-    // 暴露方法给父组件
-    // defineExpose({
-    //     play: togglePlay,
-    //     pause: () => audioRef.value?.pause(),
-    //     isPlaying: () => isPlaying.value
-    // })
 }

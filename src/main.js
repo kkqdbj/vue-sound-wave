@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import MyPlugin from './plugins/MyPlugin.ts';
+import soundWave from './plugins/index.ts';
  
 const app = createApp(App);
-app.use(MyPlugin);
+app.use(soundWave);
 app.mount('#app');
