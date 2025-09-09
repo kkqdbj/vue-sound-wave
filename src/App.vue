@@ -1,36 +1,72 @@
 
 <template>
   <div class="app">
-   <SoundWaveBar 
+   <!-- <SoundWaveBar 
    audioSrc="/test.mp3" 
-   :width="800" 
-   :height="500" 
-   :barDirection="'top-bottom'"
+   :width="200" 
+   :height="100" 
+   :barDirection="'top'"
+   :backgroundColor="backgroundColor"
    :bricksHeight="10" 
    :barSpace="1"
-   :bricksSpace="2"
+   :bricksSpace="4"
    :ltr="false"
    :smoothing = '0.9' 
    :barWidth="10" 
    :barColor="bgColor"
+   :barColorMode="'fix'"
    :barShadowColor="bgShadowColor"
    :capsColor="capsColor"
+   :barReflectionOpacity="0.5"
+   :barReflectionHeightPercent="0.8"
+   :barReflectionDisplay="'auto'"
    :capsShadowColor="capsShadowColor"
    :capsShadowBlur="10"
    :bricksTailOpacityPercent="0.5"
-   :bricksTailSmallPercent="0.8"
+   :bricksTailSmallPercent="0.5"
    barDataSort ='middleHigh'
    :barShadowBlur="10"
    :capsHeight="0" 
    @finish="handleFinish"
-   />
+   /> -->
+   <!-- <SoundWaveLine 
+   audioSrc="/test1.wav" 
+   :backgroundColor="backgroundColor"
+   :lineUnitWidth="30"
+   :width="200" 
+   :height="100" 
+   :lineColor="bgColor"
+   :lineWidth="10"
+   :lineDash="[]"
+   :smooth="true"
+   @finish="handleFinish"
+   /> -->
+   <!-- <SoundWaveSiriLine
+    audioSrc="/test.mp3"
+    :backgroundColor="backgroundColor"
+    :lineColor="bgColor"
+    :lineWidth="10"
+    :waveCount="5"
+    :width="200" 
+    :height="100"
+   /> -->
+   <!-- <SoundWaveSiriArea
+    audioSrc="/test2.wav"
+    :backgroundColor="backgroundColor"
+    :opacity="0.8"
+    :lineCount="10"
+    :width="200" 
+    :height="100"
+   /> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import SoundWaveBar from './components/soundWaveBar.vue'
-
+import SoundWaveLine from './components/soundWaveLine.vue'
+import SoundWaveSiriLine from './components/soundWaveSiriLine.vue'
+import SoundWaveSiriArea from './components/soundWaveSiriArea.vue'
 const handleFinish = ()=>{
   console.log('this is finish');
 }
@@ -54,7 +90,8 @@ const handleFinish = ()=>{
 //   0.2: 'linear-gradient(90deg, #4F46E5 0%, #7C3AED 100%)',
 //   0: 'linear-gradient(90deg, #1E293B 0%, #4F46E5 100%)'
 // }
-const bgColor = ['red','yellow','red']
+const backgroundColor = ['130deg','red','blue',]
+const bgColor = ['0deg','red','yellow','red']
 // const capsColor = {
 //   0.8: 'linear-gradient(90deg, #F59E0B 0%, #EF4444 100%)',
 //   0.6: 'linear-gradient(90deg, #EC4899 0%, #F59E0B 100%)',

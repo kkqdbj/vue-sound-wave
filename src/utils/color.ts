@@ -33,12 +33,34 @@ export const getBarColor = (
             return barColorConfig[0];
         }
         
+        let angle = 90 ;
+        const firstValue = barColorConfig[0];
+        let colors = barColorConfig
+
+        if(/^\d+(\.\d+)?\s*(deg|rad)?$/.test(firstValue)){
+            angle = parseFloat(firstValue)
+            colors = barColorConfig.slice(1)
+        }
+        
+        // 将角度转换为弧度
+        const radians = (angle * Math.PI) / 180;
+        
+        // 计算渐变的起点和终点
+        const centerX = x + width / 2;
+        const centerY = y + height / 2;
+        const length = Math.sqrt(width * width + height * height) / 2;
+        
+        const x1 = centerX - Math.cos(radians) * length;
+        const y1 = centerY - Math.sin(radians) * length;
+        const x2 = centerX + Math.cos(radians) * length;
+        const y2 = centerY + Math.sin(radians) * length;
+        
         // 创建Canvas线性渐变对象
-        const gradient = ctx.createLinearGradient(x, y, x + width, y+height);
+        const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
         
         // 添加颜色停止点，均匀分布
-        barColorConfig.forEach((color, index) => {
-            const position = index / (barColorConfig.length - 1);
+        colors.forEach((color, index) => {
+            const position = index / (colors.length - 1);
             gradient.addColorStop(position, color);
         });
         

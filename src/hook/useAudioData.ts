@@ -9,7 +9,7 @@ export default function useAudioContext<T extends {
     audioSrc: string;
 }>(
     containerRef:Ref<HTMLDivElement | undefined>,
-    canvasRef:Ref<HTMLCanvasElement | undefined>,
+    canvasRef:Ref<HTMLCanvasElement | undefined>[],
     audioRef:Ref<HTMLAudioElement | null>,
     callback:(data: Uint8Array, end: boolean)=>boolean,
     onFinish:()=>void,
@@ -48,7 +48,7 @@ export default function useAudioContext<T extends {
         if(!analyser.value || !dataArray.value){
             return;
         }
-        analyser.value.getByteFrequencyData(dataArray.value )
+        analyser.value.getByteFrequencyData(dataArray.value);
         callback(dataArray.value,false)
         animationId.value = requestAnimationFrame(draw)
     }
@@ -61,12 +61,14 @@ export default function useAudioContext<T extends {
         if(!isOver){
             animationId.value = requestAnimationFrame(drawEnd)
         }else{
-            if(canvasRef.value){
-                const ctx = canvasRef.value.getContext('2d')
-                if(ctx){
-                    ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+            canvasRef.forEach((canvas)=>{
+                if(canvas.value){
+                    const ctx = canvas.value.getContext('2d')
+                    if(ctx){
+                        ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
+                    }
                 }
-            }
+            })
             onFinish?.()
         }
     }
@@ -119,15 +121,21 @@ export default function useAudioContext<T extends {
     }
 
     const resizeCanvas = () => {
-        if (!setting.responsive || !canvasRef.value || !containerRef.value) return
+        if (!setting.responsive || !canvasRef || !containerRef.value ) return
         
         const container = containerRef.value
         const dpi = window.devicePixelRatio;
-        canvasRef.value.style.width = container.clientWidth + 'px';
-        canvasRef.value.style.height = container.clientHeight + 'px';
-        canvasRef.value.width = container.clientWidth * dpi;
-        canvasRef.value.height = container.clientHeight * dpi;
+        canvasRef.forEach((canvas)=>{
+            if(canvas.value){
+                canvas.value.style.width = container.clientWidth + 'px';
+                canvas.value.style.height = container.clientHeight + 'px';
+                canvas.value.width = container.clientWidth * dpi;
+                canvas.value.height = container.clientHeight * dpi;
+            }
+        })
+
     }
+
 
     onMounted(() => {
         resizeCanvas()

@@ -1,3 +1,76 @@
+
+export const getReflectionBounding = (
+    canvasWidth:number,
+    canvasHeight:number,
+    reflectionHeightPercent:number,
+    reflectionDisplay:string,
+)=>{
+    let bounding1={x:0,y:0,width:0,height:0}
+    let bounding2={x:0,y:0,width:0,height:0}
+    let bounding3={x:0,y:0,width:0,height:0}
+
+    bounding1={
+        x:0,
+        y:0,
+        width:canvasWidth,
+        height:canvasHeight*reflectionHeightPercent
+    }
+    
+    // 绘制倒影，从原图的底部开始截取
+    const reflectionHeight = canvasHeight * (1 - reflectionHeightPercent);
+    const drawHeight = canvasHeight * reflectionHeightPercent;
+    const type = reflectionDisplay
+    if(type ==='auto'){
+        if(reflectionHeightPercent>=0.5){
+            bounding2 = {
+                x:0,
+                y:canvasHeight - reflectionHeight,
+                width:canvasWidth,
+                height:reflectionHeight
+            }
+            bounding3 = {
+                x:0,
+                y:0,
+                width:canvasWidth,
+                height:reflectionHeight
+            }
+        }else{
+            bounding2 = {
+                x:0,
+                y:0,
+                width:canvasWidth,
+                height:canvasHeight
+            }
+            bounding3 = {
+                x:0,
+                y:reflectionHeight - drawHeight,
+                width:canvasWidth,
+                height:drawHeight
+            }
+        }
+        
+    }else if(type ==='fix'){
+        bounding2 = {
+            x:0,
+            y:0,
+            width:canvasWidth,
+            height:canvasHeight
+        }
+        bounding3 = {
+            x:0,
+            y:0,
+            width:canvasWidth,
+            height:reflectionHeight
+        }
+    }
+    
+        
+    return {
+        bounding1,
+        bounding2,
+        bounding3
+    }
+}
 export const getHorizonHeightAndVerticalHeight=(direction:string,canvasWidth:number,canvasHeight:number)=>{
     let horizonHeight = 0,verticalHeight = 0;
 
@@ -26,7 +99,6 @@ export const processData = (dataArray:Uint8Array,barDataSort:string)=>{
     }
     return dataArray
 }
-
 
 export const getBounding = (
     barWidth:number,
@@ -122,17 +194,21 @@ export const getBricksList = (
 )=>{
     const groupSize = bricksHeight + bricksSpace
     let allSize = 1;
+    let offset1,offset2;
     switch(direction) {
         case 'top':
         case 'bottom':
         case 'top-bottom':
+            offset1 = bounding.y - Math.floor(bounding.y/groupSize) * groupSize
+            offset2 = Math.ceil(bounding.height/groupSize) * groupSize - bounding.height
+            bounding.height +=offset2 + groupSize
             allSize = Math.floor(bounding.height/groupSize)
             for(let i=0; i<bounding.height; i+=groupSize){
                 const _opacity = getBricksOpacity(direction,i,allSize,groupSize,bricksTailOpacityPercent)
                 const _scale = getBricksOpacity(direction,i,allSize,groupSize,bricksTailSmallPercent)
                 callback({
                     x: bounding.x, 
-                    y: bounding.y+i, 
+                    y: bounding.y+i-offset1, 
                     width: bounding.width, 
                     height: Math.min(bricksHeight,bounding.height - i ),
                     opacity:_opacity,
@@ -143,12 +219,15 @@ export const getBricksList = (
         case 'left':
         case 'right':
         case 'left-right':
+            offset1 = bounding.x - Math.floor(bounding.x/groupSize) * groupSize
+            offset2 = Math.ceil(bounding.width/groupSize) * groupSize - bounding.width
+            bounding.width +=offset2 + groupSize
             allSize = Math.floor(bounding.width/groupSize)
             for(let i=0; i<bounding.width; i+=groupSize){
                 const _opacity = getBricksOpacity(direction,i,allSize,groupSize,bricksTailOpacityPercent)
                 const _scale = getBricksOpacity(direction,i,allSize,groupSize,bricksTailSmallPercent)
                 callback({
-                    x: bounding.x+i, 
+                    x: bounding.x+i-offset1, 
                     y: bounding.y, 
                     width: Math.min(bricksHeight,bounding.width - i ),
                     height: bounding.height,

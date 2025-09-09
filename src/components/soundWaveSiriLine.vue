@@ -7,8 +7,6 @@
       ref="canvasRef" 
       class="sound-wave-canvas"
     ></canvas>
-    <canvas ref="canvasCloneRef"  style="display: none;">
-    </canvas>
     <audio 
       ref="audioRef" 
       :src="audioSrc" 
@@ -29,29 +27,28 @@
 
 <script setup lang="ts">
 import { ref ,useAttrs} from 'vue'
-import { defaultBar } from '../setting/index'
+import { defaultSiriLine } from '../setting/index'
 import useAudioContext from '../hook/useAudioData'
-import type { soundWaveBarProps } from '../../index'
-import { useBar } from '../hook/useBar'
+import type { soundWaveSiriLineProps } from '../../index'
+import { useSiriLine } from '../hook/useSiriLine'
 
-const props = withDefaults(defineProps<soundWaveBarProps>(), defaultBar)
+const props = withDefaults(defineProps<soundWaveSiriLineProps>(), defaultSiriLine)
 
 const emits = defineEmits(['finish'])
 
 const attrs = useAttrs();
 
 const canvasRef = ref<HTMLCanvasElement>()
-const canvasCloneRef = ref<HTMLCanvasElement>()
 const containerRef = ref<HTMLDivElement>()
 const audioRef = ref<HTMLAudioElement | null>(null)
 
-const bar = useBar();
+const line = useSiriLine();
 
 const handleData = (dataArray:Uint8Array,isEnd?:boolean):boolean=>{
-  if(!canvasRef.value || !canvasCloneRef.value){
+  if(!canvasRef.value ){
     return false;
   }
-  return bar.draw(canvasRef.value,canvasCloneRef.value,dataArray,props,isEnd || false)
+  return line.draw(canvasRef.value,dataArray,props,isEnd || false)
 }
 
 const handleFinish = ()=>{
@@ -60,9 +57,9 @@ const handleFinish = ()=>{
 }
 
 // 使用音频数据处理 hook
-const { onAudioPlay, onAudioPause, onAudioEnded, togglePlay, onAudioLoaded, isPlaying } = useAudioContext<Required<soundWaveBarProps>>(
+const { onAudioPlay, onAudioPause, onAudioEnded, togglePlay, onAudioLoaded, isPlaying } = useAudioContext<Required<soundWaveSiriLineProps>>(
   containerRef,
-  [canvasRef,canvasCloneRef],
+  [canvasRef],
   audioRef,
   handleData,
   handleFinish,

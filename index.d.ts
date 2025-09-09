@@ -10,7 +10,7 @@ export type soundWaveBaseProps = {
   height?: number
   // gradientColors?: string[]
   smoothing?:number,
-  backgroundColor?: string
+  backgroundColor?: string | string[]
   responsive?: boolean
   showControls?: boolean
   fftSize?:number,
@@ -26,8 +26,9 @@ export type soundWaveBarProps = soundWaveBaseProps & {
   barReflection?:boolean,
   barDirection?:'top' |'bottom'|'left'|'right'|'top-bottom'|'left-right',
   barDataSort?:'asc'|'desc'|'middleLow'|'middleHigh'
-  barReflectionOpacity?:boolean,
+  barReflectionOpacity?:number,
   barReflectionHeightPercent?:number
+  barReflectionDisplay?:'auto' | 'fix'
   capsHeight?:number
   capsColor?:BarColorConfig
   capsShadowColor?:BarColorConfig
@@ -37,6 +38,32 @@ export type soundWaveBarProps = soundWaveBaseProps & {
   bricksSpace?:number,
   bricksTailOpacityPercent?:number,
   bricksTailSmallPercent?:number,
+}
+
+export type soundWaveLineProps = soundWaveBaseProps & {
+  lineUnitWidth?:number,
+  lineColor?:BarColorConfig
+  lineWidth?:number,
+  lineJoin?:CanvasLineJoin,
+  lineCap?:CanvasLineCap,
+  lineDash?:number[],
+  lineDashOffset?:number,
+  lineMiterLimit?:number,
+  lineDashOffset?:number,
+  smooth?:boolean,
+}
+
+export type soundWaveSiriLineProps = soundWaveBaseProps & {
+  lineColor?:BarColorConfig
+  lineWidth?:number,
+  speed?:number,
+  waveCount?:number
+}
+
+export type soundWaveSiriAreaProps = soundWaveBaseProps & {
+  colorList?:string[],
+  opacity?:number,
+  lineCount?:number
 }
 
 export {}
